@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Raul/Desktop/LotoManiaApp/loto.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1777"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="0" parent="0"/><expanded_item id="1" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="concursos" custom_title="0" dock_id="1" table="4,9:mainconcursos"/><dock_state state="000000ff00000000fd00000001000000020000023400000211fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000002340000011e00ffffff000002340000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">-- Tabela de jogadores
+            CREATE TABLE IF NOT EXISTS jogadores (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                telefone TEXT
+            );
+
+            -- Tabela de grupos de jogos fixos
+            CREATE TABLE IF NOT EXISTS grupos_fixos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL
+            );
+
+            -- Jogos fixos vinculados a jogadores e grupos
+            CREATE TABLE IF NOT EXISTS jogos_fixos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                grupo_id INTEGER NOT NULL,
+                jogador_id INTEGER NOT NULL,
+                nome TEXT NOT NULL,
+                numeros TEXT NOT NULL,
+                FOREIGN KEY (grupo_id) REFERENCES grupos_fixos(id),
+                FOREIGN KEY (jogador_id) REFERENCES jogadores(id)
+            );
+
+            -- Concursos (sorteios)
+            CREATE TABLE IF NOT EXISTS concursos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                descricao TEXT NOT NULL,
+                numeros TEXT -- 20 dezenas ou NULL
+            );
+
+            -- Jogos concretos aplicados em concursos
+            CREATE TABLE IF NOT EXISTS jogos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                concurso_id INTEGER NOT NULL,
+                jogador_id INTEGER NOT NULL,
+                numeros TEXT NOT NULL,
+                acertos INTEGER DEFAULT 0,
+                FOREIGN KEY (concurso_id) REFERENCES concursos(id),
+                FOREIGN KEY (jogador_id) REFERENCES jogadores(id)
+            );
+
+            -- Índices de performance
+            CREATE INDEX IF NOT EXISTS idx_jogos_concurso ON jogos(concurso_id);
+            CREATE INDEX IF NOT EXISTS idx_jogos_jogador ON jogos(jogador_id);
+            CREATE INDEX IF NOT EXISTS idx_jogos_acertos ON jogos(acertos);
+
+            CREATE INDEX IF NOT EXISTS idx_fixos_grupo ON jogos_fixos(grupo_id);
+            CREATE INDEX IF NOT EXISTS idx_fixos_jogador ON jogos_fixos(jogador_id);</sql><current_tab id="0"/></tab_sql></sqlb_project>
